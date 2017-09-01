@@ -1182,6 +1182,12 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     LogPrintf("Using config file %s\n", GetConfigFile(GetArg("-conf", BITCOIN_CONF_FILENAME)).string());
     LogPrintf("Using at most %i automatic connections (%i file descriptors available)\n", nMaxConnections, nFD);
 
+    fprintf(stdout, "Startup time: %s\n", DateTimeStrFormat("%Y-%m-%d %H:%M:%S", GetTime()).c_str());
+    fprintf(stdout, "Default data directory %s\n", GetDefaultDataDir().string().c_str());
+    fprintf(stdout, "Using data directory %s\n", GetDataDir().string().c_str());
+    fprintf(stdout, "Using config file %s\n", GetConfigFile(GetArg("-conf", BITCOIN_CONF_FILENAME)).string().c_str());
+    fprintf(stdout, "Using at most %i automatic connections (%i file descriptors available)\n", nMaxConnections, nFD);
+
     InitSignatureCache();
 
     LogPrintf("Using %u threads for script verification\n", nScriptCheckThreads);
