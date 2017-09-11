@@ -1084,6 +1084,9 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const Consensus
 
     if (pindexSlow) {
         CBlock block;
+            
+        LogPrintf("GetTransaction...");
+
         if (ReadBlockFromDisk(block, pindexSlow, consensusParams)) {
             for (const auto& tx : block.vtx) {
                 if (tx->GetHash() == hash) {
@@ -1146,9 +1149,18 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
 
+
+    printf("ReadBlockFromDisk(): block.nTime = %u \n", block.nTime);
+//    printf("block.nBits = %s \n", genesis.nBits.ToString().c_str());
+    printf("ReadBlockFromDisk(): block.nNonce = %u \n", block.nNonce);
+    printf("ReadBlockFromDisk(): block.GetHash = %s\n", block.GetHash().ToString().c_str());
+    printf("ReadBlockFromDisk(): block.hashMerkleRoot = %s\n", block.hashMerkleRoot.ToString().c_str());    
+    //LogPrint("bench", "- Disconnect block: %.2fms\n", (GetTimeMicros() - nStart) * 0.001);
+
+
     // Check the header
     if (!CheckProofOfWork(block.GetPoWHash(), block.nBits, consensusParams))
-        return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
+        return error("ReadBlockFromDisk: Errors in block header at %s\n", pos.ToString());
 
     return true;
 }
@@ -2176,9 +2188,12 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
     CBlockIndex *pindexDelete = chainActive.Tip();
     assert(pindexDelete);
     // Read block from disk.
+
+    printf("DisconnectTip()...");
+
     CBlock block;
     if (!ReadBlockFromDisk(block, pindexDelete, chainparams.GetConsensus()))
-        return AbortNode(state, "Failed to read block");
+        return AbortNode(state, "DisconnectTip(): Failed to read block.");
     // Apply the block atomically to the chain state.
     int64_t nStart = GetTimeMicros();
     {
@@ -2475,6 +2490,9 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
     // far from a guarantee. Things in the P2P/RPC will often end up calling
     // us in the middle of ProcessNewBlock - do not assume pblock is set
     // sanely for performance or correctness!
+
+    LogPrintf("ActivateBestChain LogPrintf\n");
+    fprintf(stdout, "ActivateBestChain fprintf\n");   
 
     CBlockIndex *pindexMostWork = NULL;
     CBlockIndex *pindexNewTip = NULL;

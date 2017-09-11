@@ -37,6 +37,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
 
     printf(" \n");
     printf("block.nTime = %u \n", genesis.nTime);
+//    printf("block.nBits = %s \n", genesis.nBits.ToString().c_str());
     printf("block.nNonce = %u \n", genesis.nNonce);
     printf("block.GetHash = %s\n", genesis.GetHash().ToString().c_str());
     printf("block.hashMerkleRoot = %s\n", genesis.hashMerkleRoot.ToString().c_str());
@@ -105,10 +106,12 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1517356801; // January 31st, 2018
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000006805c7318ce2736c0");
+//        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000006805c7318ce2736c0");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x1673fa904a93848eca83d5ca82c7af974511a7e640e22edc2976420744f2e56a"); //1155631
+//        consensus.defaultAssumeValid = uint256S("0x1673fa904a93848eca83d5ca82c7af974511a7e640e22edc2976420744f2e56a"); //1155631
+        consensus.defaultAssumeValid = uint256S("0x131a0546061da0776d11299b07022df5dfd1736530772a946009cbe49da2c889"); //1155631
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -124,12 +127,13 @@ public:
 
         genesis = CreateGenesisBlock(1503326684, 2084524493, 0x1e0ffff0, 1, 250 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-	printf("printf: hashGenesisBlock");
-	LogPrintf("LogPrintf: %s\n", "hashGenesisBlock");
+//	printf("hashGenesisBlock=%s\n", consensus.hashGenesisBlock);
+    LogPrintf("TEST hashGenesisBlock: %s\n", consensus.hashGenesisBlock.ToString().c_str());    
+    //	LogPrintf("LogPrintf: %s\n", "hashGenesisBlock");
 
 
 
-
+    // OLD SAMPLE CODE
 	//	printf("Searching for genesis block...\n");
 	// This will figure out a valid hash and Nonce if you're
 	// creating a different genesis block:
@@ -186,7 +190,7 @@ public:
         fMineBlocksOnDemand = false;
 
         checkpointData = (CCheckpointData) {
-            boost::assign::map_list_of
+//            boost::assign::map_list_of
 //            (  1500, uint256S("0x841a2965955dd288cfa707a755d05a54e45f8bd476835ec9af4402a2b59a2967"))
 //            (  4032, uint256S("0x9ce90e427198fc0ef05e5905ce3503725b80e26afd35a987965fd7e3d9cf0846"))
 //            (  8064, uint256S("0xeb984353fc5190f210651f150c40b8a4bab9eeeff0b729fcb3987da694430d70"))
@@ -203,7 +207,7 @@ public:
 //            (456000, uint256S("0xbf34f71cc6366cd487930d06be22f897e34ca6a40501ac7d401be32456372004"))
 //            (638902, uint256S("0x15238656e8ec63d28de29a8c75fcf3a5819afc953dcd9cc45cecc53baec74f38"))
 //            (721000, uint256S("0x198a7b4de1df9478e2463bd99d75b714eab235a2e63e741641dc8a759a9840e5"))
-	    (  0, uint256S(     "0x0000000000000000000000000000000000000000000000000000000000000000"))
+//	    (  0, uint256S(     "0x0000000000000000000000000000000000000000000000000000000000000000"))
         };
 
         chainTxData = ChainTxData{
@@ -265,8 +269,8 @@ public:
 
         genesis = CreateGenesisBlock(1486949366, 293345, 0x1e0ffff0, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        printf("TEST printf: hashGenesisBlock");
-        LogPrintf("TEST LogPrintf: %s\n", consensus.hashGenesisBlock.ToString().c_str());	
+//        printf("TEST printf: hashGenesisBlock");
+        LogPrintf("TEST hashGenesisBlock: %s\n", consensus.hashGenesisBlock.ToString().c_str());	
 
 	//        assert(consensus.hashGenesisBlock == uint256S("0x4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0"));
         //        assert(genesis.hashMerkleRoot == uint256S("0x97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd4ced9"));
@@ -293,9 +297,9 @@ public:
         fMineBlocksOnDemand = false;
 
         checkpointData = (CCheckpointData) {
-            boost::assign::map_list_of
+//            boost::assign::map_list_of
 //            ( 2056, uint256S("0x17748a31ba97afdc9a4f86837a39d287e3e7c7290a08a1d816c5969c78a83289")),
-	    (  0, uint256S(    "0x0000000000000000000000000000000000000000000000000000000000000000"))
+//	    (  0, uint256S(    "0x0000000000000000000000000000000000000000000000000000000000000000"))
         };
 
         chainTxData = ChainTxData{
@@ -353,8 +357,8 @@ public:
 
         genesis = CreateGenesisBlock(1296688602, 0, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        printf("REGTEST printf: hashGenesisBlock");
-        LogPrintf("REGTEST LogPrintf: %s\n", consensus.hashGenesisBlock.ToString().c_str());	
+//        printf("REGTEST printf: hashGenesisBlock");
+        LogPrintf("REGTEST hashGenesisBlock: %s\n", consensus.hashGenesisBlock.ToString().c_str());	
 
 //        assert(consensus.hashGenesisBlock == uint256S("0x530827f38f93b43ed12af0b3ad25a288dc02ed74d6d7857862df51fc56c416f9"));
 	//        assert(genesis.hashMerkleRoot == uint256S("0x97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd4ced9"));

@@ -668,7 +668,7 @@ void ThreadImport(std::vector<boost::filesystem::path> vImportFiles)
     // scan for better chains in the block chain database, that are not yet connected in the active best chain
     CValidationState state;
     if (!ActivateBestChain(state, chainparams)) {
-        LogPrintf("Failed to connect best block");
+        LogPrintf("Failed to connect best block.  THIS IS THE ERROR TOO.\n");
         StartShutdown();
     }
 
@@ -1635,7 +1635,10 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     LogPrintf("mapBlockIndex.size() = %u\n",   mapBlockIndex.size());
     LogPrintf("nBestHeight = %d\n",                   chainActive.Height());
     if (GetBoolArg("-listenonion", DEFAULT_LISTEN_ONION))
+    {
+        LogPrintf("StartTorControl... \n");
         StartTorControl(threadGroup, scheduler);
+    }
 
     Discover(threadGroup);
 
