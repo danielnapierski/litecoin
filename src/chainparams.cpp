@@ -128,10 +128,8 @@ public:
         genesis = CreateGenesisBlock(1503326684, 2084524493, 0x1e0ffff0, 1, 250 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
 //	printf("hashGenesisBlock=%s\n", consensus.hashGenesisBlock);
-    LogPrintf("TEST hashGenesisBlock: %s\n", consensus.hashGenesisBlock.ToString().c_str());    
+    LogPrintf("Network: %s hashGenesisBlock: %s\n", strNetworkID, consensus.hashGenesisBlock.ToString().c_str());    
     //	LogPrintf("LogPrintf: %s\n", "hashGenesisBlock");
-
-
 
     // OLD SAMPLE CODE
 	//	printf("Searching for genesis block...\n");
@@ -161,9 +159,6 @@ public:
 	//    printf("block.nNonce = %u \n", block.nNonce);
 	//    printf("block.GetHash = %s\n", block.GetHash().ToString().c_str());
 
-
-
-
 	//	printf(consensus.hashGenesisBlock);
 	//        assert(consensus.hashGenesisBlock == uint256S("0x0e01daf09e55cc6386ca7f57ae99d6c1a9fa2c02163e4da4bd6c54daef0b1119"));//"0x12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2"));
         //assert(genesis.hashMerkleRoot == uint256S("0x0e01daf09e55cc6386ca7f57ae99d6c1a9fa2c02163e4da4bd6c54daef0b1119")); //"0x97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd4ced9"));
@@ -187,7 +182,11 @@ public:
         fMiningRequiresPeers = true;
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
-        fMineBlocksOnDemand = false;
+        fMineBlocksOnDemand = true;
+
+    LogPrintf("Network: %s fMineBlocksOnDemand: %s\n", strNetworkID, fMineBlocksOnDemand); 
+    // consensus.hashGenesisBlock.ToString().c_str());    
+
 
         checkpointData = (CCheckpointData) {
 //            boost::assign::map_list_of
@@ -294,7 +293,7 @@ public:
         fMiningRequiresPeers = true;
         fDefaultConsistencyChecks = false;
         fRequireStandard = false;
-        fMineBlocksOnDemand = false;
+        fMineBlocksOnDemand = true;
 
         checkpointData = (CCheckpointData) {
 //            boost::assign::map_list_of

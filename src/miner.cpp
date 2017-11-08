@@ -130,6 +130,8 @@ void BlockAssembler::resetBlock()
 
 std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, bool fMineWitnessTx)
 {
+    LogPrintf("BlockAssembler::CreateNewBlock ...");
+
     int64_t nTimeStart = GetTimeMicros();
 
     resetBlock();

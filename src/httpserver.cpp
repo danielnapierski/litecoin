@@ -48,6 +48,7 @@ public:
     }
     void operator()()
     {
+        LogPrint("http", "operator() path:%s \n", path);        
         func(req.get(), path);
     }
 
@@ -117,6 +118,8 @@ public:
     /** Thread function */
     void Run()
     {
+        LogPrint("http", "Run");
+
         ThreadCounter count(*this);
         while (true) {
             std::unique_ptr<WorkItem> i;
@@ -126,8 +129,10 @@ public:
                     cond.wait(lock);
                 if (!running)
                     break;
+                LogPrint("http", "About to dequeue...");
                 i = std::move(queue.front());
                 queue.pop_front();
+                LogPrint("http", "Popped.");
             }
             (*i)();
         }
@@ -255,12 +260,14 @@ static void http_request_cb(struct evhttp_request* req, void* arg)
 
     // Early address-based allow check
     if (!ClientAllowed(hreq->GetPeer())) {
+        LogPrint("http", "NOT ALLOWED\n");
         hreq->WriteReply(HTTP_FORBIDDEN);
         return;
     }
 
     // Early reject unknown HTTP methods
     if (hreq->GetRequestMethod() == HTTPRequest::UNKNOWN) {
+        LogPrint("http", "BAD METHOD\n");
         hreq->WriteReply(HTTP_BADMETHOD);
         return;
     }
@@ -276,6 +283,9 @@ static void http_request_cb(struct evhttp_request* req, void* arg)
             match = (strURI == i->prefix);
         else
             match = (strURI.substr(0, i->prefix.size()) == i->prefix);
+
+        LogPrint("http", "%s %s\n", strURI, match ? "true" : "false");
+
         if (match) {
             path = strURI.substr(i->prefix.size());
             break;
@@ -284,15 +294,20 @@ static void http_request_cb(struct evhttp_request* req, void* arg)
 
     // Dispatch to worker thread
     if (i != iend) {
+        LogPrint("http", "Dispatching worker thread...\n");
         std::unique_ptr<HTTPWorkItem> item(new HTTPWorkItem(std::move(hreq), path, i->handler));
         assert(workQueue);
-        if (workQueue->Enqueue(item.get()))
+        if (workQueue->Enqueue(item.get())) 
+        {
+            LogPrint("http", "Queue took ownership of worker.\n");
             item.release(); /* if true, queue took ownership */
+        }
         else {
             LogPrintf("WARNING: request rejected because http work queue depth exceeded, it can be increased with the -rpcworkqueue= setting\n");
             item->req->WriteReply(HTTP_INTERNAL, "Work queue depth exceeded");
         }
     } else {
+        LogPrint("http", "No handler found.\n");
         hreq->WriteReply(HTTP_NOTFOUND);
     }
 }
@@ -369,9 +384,15 @@ static void libevent_log_cb(int severity, const char *msg)
 # define EVENT_LOG_WARN _EVENT_LOG_WARN
 #endif
     if (severity >= EVENT_LOG_WARN) // Log warn messages and higher without debug category
+    {
         LogPrintf("libevent: %s\n", msg);
-    else
+        LogPrint("http", "libevent: %s\n", msg);
+
+    }
+    else{
         LogPrint("libevent", "libevent: %s\n", msg);
+        LogPrint("http", "libevent: %s\n", msg);
+    }
 }
 
 bool InitHTTPServer()
@@ -515,6 +536,7 @@ struct event_base* EventBase()
 
 static void httpevent_callback_fn(evutil_socket_t, short, void* data)
 {
+    LogPrint("http", "static handler\n");
     // Static handler: simply call inner handler
     HTTPEvent *self = ((HTTPEvent*)data);
     self->handler();
@@ -525,6 +547,7 @@ static void httpevent_callback_fn(evutil_socket_t, short, void* data)
 HTTPEvent::HTTPEvent(struct event_base* base, bool _deleteWhenTriggered, const std::function<void(void)>& _handler):
     deleteWhenTriggered(_deleteWhenTriggered), handler(_handler)
 {
+    LogPrint("http", "event\n");    
     ev = event_new(base, -1, 0, httpevent_callback_fn, this);
     assert(ev);
 }
@@ -534,6 +557,7 @@ HTTPEvent::~HTTPEvent()
 }
 void HTTPEvent::trigger(struct timeval* tv)
 {
+    LogPrint("http", "trigger\n");    
     if (tv == NULL)
         event_active(ev, 0, 0); // immediately trigger event in main thread
     else
@@ -550,6 +574,9 @@ HTTPRequest::~HTTPRequest()
         LogPrintf("%s: Unhandled request\n", __func__);
         WriteReply(HTTP_INTERNAL, "Unhandled request");
     }
+
+     LogPrint("http", "%s: Handled request\n", __func__);
+
     // evhttpd cleans up the request, as long as a reply was sent.
 }
 
@@ -598,6 +625,8 @@ void HTTPRequest::WriteHeader(const std::string& hdr, const std::string& value)
  */
 void HTTPRequest::WriteReply(int nStatus, const std::string& strReply)
 {
+    LogPrint("http", "reply %s\n", strReply);
+
     assert(!replySent && req);
     // Send event to main http thread to send reply message
     struct evbuffer* evb = evhttp_request_get_output_buffer(req);
@@ -663,8 +692,7 @@ void UnregisterHTTPHandler(const std::string &prefix, bool exactMatch)
     for (; i != iend; ++i)
         if (i->prefix == prefix && i->exactMatch == exactMatch)
             break;
-    if (i != iend)
-    {
+    if (i != iend) {
         LogPrint("http", "Unregistering HTTP handler for %s (exactmatch %d)\n", prefix, exactMatch);
         pathHandlers.erase(i);
     }

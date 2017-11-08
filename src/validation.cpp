@@ -3255,6 +3255,8 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
 bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool *fNewBlock)
 {
     {
+        LogPrintf("ProcessNewBlock \n");
+
         CBlockIndex *pindex = NULL;
         if (fNewBlock) *fNewBlock = false;
         CValidationState state;

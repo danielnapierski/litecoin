@@ -628,6 +628,36 @@ UniValue getblockhash(const JSONRPCRequest& request)
     return pblockindex->GetBlockHash().GetHex();
 }
 
+UniValue getpetrcrd(const JSONRPCRequest& request)
+{
+    //    LogPrint("rpc", "Attempt to prune blocks close to the tip.  Retaining the minimum number of blocks.");
+    //LogPrint("rpc", "Peer request for pet record %i ", petrcrdid);
+
+    uint256 hash = uint256S(request.params[0].get_str());
+
+    LogPrint("rpc", "Peer request for pet record %s", hash.ToString().c_str());
+    
+    UniValue obj(UniValue::VOBJ);
+//    obj.push_back(Pair("blocks",           (int)chainActive.Height()));
+//    obj.push_back(Pair("currentblocksize", (uint64_t)nLastBlockSize));
+//    obj.push_back(Pair("currentblockweight", (uint64_t)nLastBlockWeight));
+//    obj.push_back(Pair("currentblocktx",   (uint64_t)nLastBlockTx));
+//    obj.push_back(Pair("difficulty",       (double)GetDifficulty()));
+//    obj.push_back(Pair("errors",           GetWarnings("statusbar")));
+//    obj.push_back(Pair("networkhashps",    getnetworkhashps(request)));
+//    obj.push_back(Pair("pooledtx",         (uint64_t)mempool.size()));
+//    obj.push_back(Pair("chain",            Params().NetworkIDString()));
+
+    obj.push_back(Pair("petname", "John D. Dog"));
+    obj.push_back(Pair("petowner", "Alice Owner"));
+    obj.push_back(Pair("petphone", "+1 (987) 654-3210"));
+    obj.push_back(Pair("email", "alice@email.com"));
+    obj.push_back(Pair("hash", hash.ToString().c_str()));
+
+    return obj;
+}
+
+
 UniValue getblockheader(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
@@ -1437,6 +1467,8 @@ static const CRPCCommand commands[] =
     { "blockchain",         "verifychain",            &verifychain,            true,  {"checklevel","nblocks"} },
 
     { "blockchain",         "preciousblock",          &preciousblock,          true,  {"blockhash"} },
+
+    { "blockchain",         "getpetrcrd",             &getpetrcrd,             true,  {"petrcrdid"} },
 
     /* Not shown in help */
     { "hidden",             "invalidateblock",        &invalidateblock,        true,  {"blockhash"} },
