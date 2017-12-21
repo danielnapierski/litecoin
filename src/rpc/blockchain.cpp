@@ -630,11 +630,18 @@ UniValue getblockhash(const JSONRPCRequest& request)
 
 UniValue getpetrcrd(const JSONRPCRequest& request)
 {
-    //    LogPrint("rpc", "Attempt to prune blocks close to the tip.  Retaining the minimum number of blocks.");
-    //LogPrint("rpc", "Peer request for pet record %i ", petrcrdid);
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
+        throw runtime_error(
+            "getpetrcrd petid petkey ( verbose )\n"
+            "\nReturns pet record contents as a json object.\n"
+            "\nArguments:\n"
+            "1. petid\n"
+            "2. petkey\n"
+            "3. verbose (boolean, optional, default=false)\n"
+        );
 
-    uint256 hash = uint256S(request.params[0].get_str());
-
+    std::string petId = request.params[0].get_str();
+    uint256 hash = ParseHashV(request.params[1], "petkey");
     LogPrint("rpc", "Peer request for pet record %s", hash.ToString().c_str());
     
     UniValue obj(UniValue::VOBJ);
@@ -652,7 +659,8 @@ UniValue getpetrcrd(const JSONRPCRequest& request)
     obj.push_back(Pair("petowner", "Alice Owner"));
     obj.push_back(Pair("petphone", "+1 (987) 654-3210"));
     obj.push_back(Pair("email", "alice@email.com"));
-    obj.push_back(Pair("hash", hash.ToString().c_str()));
+    obj.push_back(Pair("petid", petId));
+    obj.push_back(Pair("petkey", hash.ToString().c_str()));
 
     return obj;
 }
