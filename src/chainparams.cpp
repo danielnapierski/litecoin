@@ -84,7 +84,7 @@ public:
         consensus.BIP34Hash = uint256S("fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf");
         consensus.BIP65Height = 918684; // bab3041e8977e0dc3eeff63fe707b92bde1dd449d8efafb248c27c8264cc311a
         consensus.BIP66Height = 811879; // 7aceee012833fa8952f8835d8b1b3ae233cd6ab08fdb27a771d2bd7bdc491894
-        consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); 
+        consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 50 * 60; // 50 minutes
         consensus.nPowTargetSpacing = 2.5 * 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -128,7 +128,7 @@ public:
         genesis = CreateGenesisBlock(1503326684, 2084524493, 0x1e0ffff0, 1, 250 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
 //	printf("hashGenesisBlock=%s\n", consensus.hashGenesisBlock);
-    LogPrintf("Network: %s hashGenesisBlock: %s\n", strNetworkID, consensus.hashGenesisBlock.ToString().c_str());    
+    LogPrintf("Network: %s hashGenesisBlock: %s\n", strNetworkID, consensus.hashGenesisBlock.ToString().c_str());
     //	LogPrintf("LogPrintf: %s\n", "hashGenesisBlock");
 
     // OLD SAMPLE CODE
@@ -184,12 +184,17 @@ public:
         fRequireStandard = true;
         fMineBlocksOnDemand = true;
 
-    LogPrintf("Network: %s fMineBlocksOnDemand: %s\n", strNetworkID, fMineBlocksOnDemand); 
-    // consensus.hashGenesisBlock.ToString().c_str());    
+    LogPrintf("Network: %s fMineBlocksOnDemand: %s\n", strNetworkID, fMineBlocksOnDemand);
+    // consensus.hashGenesisBlock.ToString().c_str());
 
 
         checkpointData = (CCheckpointData) {
-//            boost::assign::map_list_of
+            boost::assign::map_list_of
+            ( 1, uint256S("0x0ce676a239e752b9813edee6ff0370c7291ed08616e5efbd73c6bbc93eb42601"))
+            ( 2, uint256S("0xac1a970bbcba2e24b27143f5ec41d6fcb60e571ba33f6415c64500d14e66fd71"))
+            ( 3, uint256S("0x87aaf00e3b9f8c770799405b327bb67be6feee1bf90334347e5eb3efd51c771a"))
+            ( 4, uint256S("0xc2a1bb19cf1c4f530cfa291c91759523b82e1e2b199c7de6600554a9e3563d17"))
+            ( 5, uint256S("0xb9745c147a6d8802b123307302f608b95d922e39854e593499d0dc632499d954"))
 //            (  1500, uint256S("0x841a2965955dd288cfa707a755d05a54e45f8bd476835ec9af4402a2b59a2967"))
 //            (  4032, uint256S("0x9ce90e427198fc0ef05e5905ce3503725b80e26afd35a987965fd7e3d9cf0846"))
 //            (  8064, uint256S("0xeb984353fc5190f210651f150c40b8a4bab9eeeff0b729fcb3987da694430d70"))
@@ -269,7 +274,7 @@ public:
         genesis = CreateGenesisBlock(1486949366, 293345, 0x1e0ffff0, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
 //        printf("TEST printf: hashGenesisBlock");
-        LogPrintf("TEST hashGenesisBlock: %s\n", consensus.hashGenesisBlock.ToString().c_str());	
+        LogPrintf("TEST hashGenesisBlock: %s\n", consensus.hashGenesisBlock.ToString().c_str());
 
 	//        assert(consensus.hashGenesisBlock == uint256S("0x4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0"));
         //        assert(genesis.hashMerkleRoot == uint256S("0x97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd4ced9"));
@@ -357,7 +362,7 @@ public:
         genesis = CreateGenesisBlock(1296688602, 0, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
 //        printf("REGTEST printf: hashGenesisBlock");
-        LogPrintf("REGTEST hashGenesisBlock: %s\n", consensus.hashGenesisBlock.ToString().c_str());	
+        LogPrintf("REGTEST hashGenesisBlock: %s\n", consensus.hashGenesisBlock.ToString().c_str());
 
 //        assert(consensus.hashGenesisBlock == uint256S("0x530827f38f93b43ed12af0b3ad25a288dc02ed74d6d7857862df51fc56c416f9"));
 	//        assert(genesis.hashMerkleRoot == uint256S("0x97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd4ced9"));
@@ -368,7 +373,7 @@ public:
         fMiningRequiresPeers = false;
         fDefaultConsistencyChecks = true;
         fRequireStandard = false;
-        fMineBlocksOnDemand = true; 
+        fMineBlocksOnDemand = true;
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
