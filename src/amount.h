@@ -16,7 +16,7 @@ typedef int64_t CAmount;
 
 static const CAmount COIN = 100000000;
 static const CAmount CENT = 1000000;
-static const int BLOCK_SUBSIDY = 50000;
+static const int BLOCK_SUBSIDY = 50;
 
 extern const std::string CURRENCY_UNIT;
 
